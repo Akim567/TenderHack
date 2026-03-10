@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     debug: bool = Field(default=True)
     host: str = Field(default="127.0.0.1")
     port: int = Field(default=8000)
-    database_url: str = Field(default="sqlite+aiosqlite:///./app.db")
+    database_url: str = Field(default="sqlite:///./app.db")
     redis_url: str = Field(default="redis://localhost:6379/0")
     log_level: str = Field(default="INFO")
 

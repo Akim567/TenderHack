@@ -11,7 +11,7 @@ def create_app() -> FastAPI:
     """Build and configure FastAPI application instance."""
     settings = get_settings()
 
-    setup_logging(settings.log_level)
+    setup_logging(level=settings.log_level, app_env=settings.app_env)
 
     application = FastAPI(
         title=settings.app_name,

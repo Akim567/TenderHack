@@ -1,6 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.core.dependencies import get_parser_service
 from app.schemas.parsing import ParseJobRequest, ParseJobResponse
+from app.services.parser_service import ParserService
 
 router = APIRouter(prefix="/parsing")
 
@@ -10,10 +12,19 @@ router = APIRouter(prefix="/parsing")
     response_model=ParseJobResponse,
     status_code=status.HTTP_202_ACCEPTED,
     summary="Create parsing job",
+    tags=["parsing"],
 )
-async def create_parse_job(payload: ParseJobRequest) -> ParseJobResponse:
+async def create_parse_job(
+    payload: ParseJobRequest,
+    parser_service: ParserService = Depends(get_parser_service),
+) -> ParseJobResponse:
     """Business endpoint contract. Implementation will be added later."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Parsing workflow is not implemented yet.",
-    )
+    try:
+        job_id = await parser_service.create_parse_job(payload.source)
+    except NotImplementedError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail=str(exc),
+        ) from exc
+
+    return ParseJobResponse(job_id=job_id, status="queued")
