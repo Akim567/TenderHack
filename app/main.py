@@ -18,6 +18,9 @@ def create_app() -> FastAPI:
         description="Backend template for a distributed monolith architecture.",
         version="0.1.0",
         debug=settings.debug,
+        docs_url=settings.docs_url,
+        redoc_url=settings.redoc_url,
+        openapi_url=settings.openapi_url,
     )
 
     register_middlewares(application, settings)
